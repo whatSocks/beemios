@@ -7,6 +7,7 @@
 //
 
 #import "GoalSummaryViewController.h"
+#import "constants.h"
 #define kDefaultStepperWidth 94
 #define kLeftMargin 20
 

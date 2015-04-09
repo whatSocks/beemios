@@ -51,6 +51,7 @@ NSString *const kAccessTokenKey = @"access_token";
 NSString *const kSDK = @"ios";
 NSString *const kUserAgentBase = @"FBiOSSDK";
 
+NSString *const kExtendTokenRestMethod = @"auth.extendSSOAccessToken";
 NSString *const kBatchRestMethodBaseURL = @"method/";
 
 // response object property/key
@@ -67,13 +68,13 @@ typedef void (^KeyValueActionHandler)(NSString *key, id value);
 // ----------------------------------------------------------------------------
 // FBRequestConnectionState
 
-typedef NS_ENUM(NSUInteger, FBRequestConnectionState) {
+typedef enum FBRequestConnectionState {
     kStateCreated,
     kStateSerialized,
     kStateStarted,
     kStateCompleted,
     kStateCancelled,
-};
+} FBRequestConnectionState;
 
 // ----------------------------------------------------------------------------
 // Graph API error codes
@@ -116,9 +117,6 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 // FBRequestConnection
 
 @implementation FBRequestConnection
-{
-    NSString *_overrideVersionPart;
-}
 
 // ----------------------------------------------------------------------------
 // Property implementations
@@ -261,14 +259,6 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     self.state = kStateCancelled;
     [self.connection cancel];
     self.connection = nil;
-}
-
-- (void)overrideVersionPartWith:(NSString *)version
-{
-    if (![_overrideVersionPart isEqualToString:version]) {
-        [_overrideVersionPart release];
-        _overrideVersionPart = [version copy];
-    }
 }
 
 // ----------------------------------------------------------------------------
@@ -625,8 +615,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
         [attachments release];
 
-        NSString *URLString = [FBUtility buildFacebookUrlWithPre:kGraphURLPrefix post:nil version:_overrideVersionPart];
-        request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:URLString]
+        request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[FBUtility buildFacebookUrlWithPre:kGraphURLPrefix]]
                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                                       timeoutInterval:timeout];
         [request setHTTPMethod:@"POST"];
@@ -979,8 +968,8 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
     if (self.state != kStateCancelled) {
         NSAssert(self.state == kStateStarted,
-                 @"Unexpected state %lu in completeWithResponse",
-                 (unsigned long)self.state);
+                 @"Unexpected state %d in completeWithResponse",
+                 self.state);
         self.state = kStateCompleted;
     }
 
@@ -1273,7 +1262,6 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
                 // Access token has expired
                 case FBGraphApiErrorAccessTokenExpired:
                     errorString = @"The access token associated with the active session has expired.";
-                    break;
                 // Access token was invalidated
                 case FBGraphApiErrorAccessTokenInvalidated:
                     errorString = @"The access token associated with the active session has been invalidated.";
@@ -1635,10 +1623,9 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 + (void)addRequestToExtendTokenForSession:(FBSession *)session connection:(FBRequestConnection *)connection
 {
     FBRequest *request = [[FBRequest alloc] initWithSession:session
-                                                  graphPath:@"oauth/access_token"
-                                                 parameters:@{@"grant_type" : @"fb_extend_sso_token"}
+                                                 restMethod:kExtendTokenRestMethod
+                                                 parameters:nil
                                                  HTTPMethod:nil];
-    [request overrideVersionPartWith:@"v2.0"];
     [connection addRequest:request
          completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              if (session.isOpen) {

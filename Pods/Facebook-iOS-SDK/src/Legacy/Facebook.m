@@ -22,7 +22,6 @@
 #import "FBLogger.h"
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
-#import "FBRequest+Internal.h"
 #import "FBSession+Internal.h"
 #import "FBSessionManualTokenCachingStrategy.h"
 #import "FBSessionUtility.h"
@@ -372,11 +371,9 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     }
     _isExtendingAccessToken = YES;
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                   @"fb_extend_sso_token", @"grant_type",
+                                   @"auth.extendSSOAccessToken", @"method",
                                    nil];
-    _requestExtendingAccessToken = [self requestWithGraphPath:@"oauth/access_token"
-                                                    andParams:params
-                                                  andDelegate:self];
+    _requestExtendingAccessToken = [self requestWithParams:params andDelegate:self];
 }
 
 /**

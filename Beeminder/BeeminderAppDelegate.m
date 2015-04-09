@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "CoreData+MagicalRecord.h"
 #import "NSString+Base64.h"
+#import "constants.h"
 
 @implementation BeeminderAppDelegate
 
@@ -127,7 +128,7 @@ NSString * AFURLEncodedStringFromStringWithEncoding(NSString *string, NSStringEn
     [request setAllHTTPHeaderFields:[NSDictionary dictionaryWithObjectsAndKeys:headerString, @"Authorization", nil]];
 
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    return operation;
+    return [[AFHTTPRequestOperation alloc] initWithRequest:request];
 }
 
 + (NSString *)hmacSha1SignatureForBaseString:(NSString *)baseString andKey:(NSString *)key
@@ -426,7 +427,7 @@ NSString * AFURLEncodedStringFromStringWithEncoding(NSString *string, NSStringEn
         [[NSUserDefaults standardUserDefaults] synchronize];
 //        [self managedObjectContext];
 
-        [Fabric with:@[CrashlyticsKit]];
+ //       [Fabric with:@[CrashlyticsKit]];
         [MagicalRecord setupAutoMigratingCoreDataStack];
     
         [User MR_deleteAllMatchingPredicate:[NSPredicate predicateWithValue:YES]];
@@ -434,7 +435,7 @@ NSString * AFURLEncodedStringFromStringWithEncoding(NSString *string, NSStringEn
         [Datapoint MR_deleteAllMatchingPredicate:[NSPredicate predicateWithValue:YES]];
     }
     else {
-        [Fabric with:@[CrashlyticsKit]];
+ //       [Fabric with:@[CrashlyticsKit]];
         [MagicalRecord setupAutoMigratingCoreDataStack];
     }
     

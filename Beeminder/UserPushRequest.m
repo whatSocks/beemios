@@ -7,6 +7,7 @@
 //
 
 #import "UserPushRequest.h"
+#import "constants.h"
 
 @implementation UserPushRequest
 

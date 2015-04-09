@@ -9,6 +9,7 @@
 #import "GalleryViewController.h"
 #import "GoalSummaryViewController.h"
 #import "SignInViewController.h"
+#import "constants.h"
 
 @interface GalleryViewController ()
 

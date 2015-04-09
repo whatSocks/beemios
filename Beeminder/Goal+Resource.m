@@ -7,6 +7,7 @@
 //
 
 #import "Goal+Resource.h"
+#import "constants.h"
 
 @implementation Goal (Resource)
 

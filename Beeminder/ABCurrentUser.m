@@ -7,6 +7,7 @@
 //
 
 #import "ABCurrentUser.h"
+#import "constants.h"
 
 @implementation ABCurrentUser
 

@@ -186,6 +186,8 @@
         <scene sceneID="VIi-GR-339">
             <objects>
                 <navigationController definesPresentationContext="YES" id="TNY-Pp-8Ks" sceneMemberID="viewController">
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="568"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="Z05-ez-TNE">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
